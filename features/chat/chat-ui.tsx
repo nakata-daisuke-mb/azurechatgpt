@@ -15,6 +15,7 @@ import { FC, FormEvent, useRef, useState } from "react";
 import { PromptGPTBody } from "./chat-api-helpers";
 import { transformCosmosToAIModel } from "./chat-helpers";
 import { ChatMessageModel } from "./chat-service";
+import { Dialog, DialogTitle, DialogContent } from "@/components/ui/dialog";
 
 interface Prop {
   chats: Array<ChatMessageModel>;
@@ -43,6 +44,8 @@ export const ChatUI: FC<Prop> = (props) => {
     body: chatBody,
     initialMessages: transformCosmosToAIModel(props.chats),
   });
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   useChatScrollAnchor(messages, scrollRef);
@@ -75,7 +78,7 @@ export const ChatUI: FC<Prop> = (props) => {
   return (
     <Card className="h-full relative">
       <div className="h-full rounded-md overflow-y-auto" ref={scrollRef}>
-        <div className="flex justify-center p-4">
+        <div className="flex justify-center items-center p-4">
           <Tabs
             defaultValue={props.model ?? "GPT-3.5"}
             onValueChange={onValueChange}
@@ -89,6 +92,31 @@ export const ChatUI: FC<Prop> = (props) => {
               </TabsTrigger>
             </TabsList>
           </Tabs>
+          <span
+            className={`ml-4 text-2xl cursor-pointer ${messages.length !== 0 ? "text-gray-400 cursor-not-allowed" : ""}`} 
+            onClick={() => {
+              if (messages.length === 0) { 
+                setIsDialogOpen(true);
+              }
+            }}
+          >
+            ⚙️
+          </span>
+          <Dialog isOpen={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
+            <DialogTitle>設定</DialogTitle>
+            <DialogContent>
+              <label>
+                システムプロンプト
+                <textarea className="border rounded w-full p-2 mt-2"></textarea>
+              </label>
+              <div className="mt-4">
+                <label>
+                  温度
+                  <input type="range" className="w-full mt-2" />
+                </label>
+              </div>
+            </DialogContent>
+          </Dialog>            
         </div>
         <div className=" pb-[80px] ">
           {messages.map((message, index) => (
