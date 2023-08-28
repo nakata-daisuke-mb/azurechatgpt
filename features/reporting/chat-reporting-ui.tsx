@@ -1,4 +1,5 @@
 import ChatRow from "@/components/chat/chat-row";
+import ChatRowUser from "@/components/chat/chat-row-user";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FC } from "react";
@@ -29,17 +30,20 @@ export const ChatReportingUI: FC<Props> = async (props) => {
           </Tabs>
         </div>
         <div className=" pb-[80px] ">
-          {chats.map((message, index) => (
-            <ChatRow
-              name={
-                message.role === "user" ? chatThread.useName : "AzureChatGPT"
-              }
-              profilePicture={message.role === "user" ? "" : "/ai-icon.png"}
-              message={message.content}
-              type={message.role}
-              key={index}
-            />
-          ))}
+          {chats.map((message, index) => {
+            const RowComponent = message.role === "user" ? ChatRowUser : ChatRow;
+            return (
+              <RowComponent
+                name={
+                  message.role === "user" ? chatThread.useName : "AzureChatGPT"
+                }
+                profilePicture={message.role === "user" ? "" : "/ai-icon.png"}
+                message={message.content}
+                type={message.role}
+                key={index}
+              />
+            );
+          })}
         </div>
       </div>
     </Card>

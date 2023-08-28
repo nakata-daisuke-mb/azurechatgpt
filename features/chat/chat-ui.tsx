@@ -3,6 +3,7 @@
 import ChatInput from "@/components/chat/chat-input";
 import ChatLoading from "@/components/chat/chat-loading";
 import ChatRow from "@/components/chat/chat-row";
+import ChatRowUser from "@/components/chat/chat-row-user";
 import { useChatScrollAnchor } from "@/components/hooks/use-chat-scroll-anchor";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -91,19 +92,22 @@ export const ChatUI: FC<Prop> = (props) => {
           </Tabs>
         </div>
         <div className=" pb-[80px] ">
-          {messages.map((message, index) => (
-            <ChatRow
-              name={
-                message.role === "user" ? session?.user?.name! : "AzureChatGPT"
-              }
-              profilePicture={
-                message.role === "user" ? session?.user?.image! : "/ai-icon.png"
-              }
-              message={message.content}
-              type={message.role}
-              key={index}
-            />
-          ))}
+          {messages.map((message, index) => {
+            const RowComponent = message.role === "user" ? ChatRowUser : ChatRow;
+            return (
+              <RowComponent
+                name={
+                  message.role === "user" ? session?.user?.name! : "AzureChatGPT"
+                }
+                profilePicture={
+                  message.role === "user" ? session?.user?.image! : "/ai-icon.png"
+                }
+                message={message.content}
+                type={message.role}
+                key={index}
+              />
+            );
+          })}
           {isLoading && <ChatLoading />}
         </div>
       </div>
