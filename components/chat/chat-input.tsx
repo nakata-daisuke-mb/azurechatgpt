@@ -15,6 +15,7 @@ const ChatInput: FC<Props> = (props) => {
   const [rows, setRows] = useState(1);
   const maxRows = 6;
   const [keysPressed, setKeysPressed] = useState(new Set());
+  const [isComposing, setIsComposing] = useState(false);
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     setKeysPressed(keysPressed.add(event.key));
@@ -26,11 +27,22 @@ const ChatInput: FC<Props> = (props) => {
     if (
       keysPressed.has("Enter") &&
       !keysPressed.has("Shift") &&
+      !isComposing && // IME変換中でない場合のみ
       buttonRef.current
     ) {
       buttonRef.current.click();
       event.preventDefault();
     }
+  };
+
+  // IMEの変換を開始したとき
+  const onCompositionStart = () => {
+    setIsComposing(true);
+  };
+
+  // IMEの変換を終了したとき
+  const onCompositionEnd = () => {
+    setIsComposing(false);
   };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -69,6 +81,8 @@ const ChatInput: FC<Props> = (props) => {
           onKeyUp={onKeyUp}
           onKeyDown={onKeyDown}
           onChange={onChange}
+          onCompositionStart={onCompositionStart}
+          onCompositionEnd={onCompositionEnd}
         ></Textarea>
         <div className="absolute right-0 bottom-0 px-8 flex items-end h-full mr-2 mb-4">
           <Button
