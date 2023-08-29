@@ -75,7 +75,19 @@ export const ChatUI: FC<Prop> = (props) => {
     handleSubmit(e);
   };
 
+  const handleConfirm = () => {
+    setTemperature(dialogTemperature);
+    setSystemPrompt(dialogSystemPrompt);
+    setIsDialogOpen(false);
+  };
+
   const [temperature, setTemperature] = useState(0.6);
+  const [dialogTemperature, setDialogTemperature] = useState(temperature);
+
+  const [systemPrompt, setSystemPrompt] = useState(`-You are AzureChatGPT who is a helpful AI Assistant.
+    - You will provide clear and concise queries, and you will respond with polite and professional answers.
+    - You will answer questions truthfully and accurately.`);
+  const [dialogSystemPrompt, setDialogSystemPrompt] = useState(systemPrompt);
 
   return (
     <Card className="h-full relative">
@@ -98,29 +110,35 @@ export const ChatUI: FC<Prop> = (props) => {
             className={`ml-4 text-2xl cursor-pointer ${messages.length !== 0 ? "text-gray-400 cursor-not-allowed" : ""}`} 
             onClick={() => {
               if (messages.length === 0) { 
+                setDialogTemperature(temperature);
+                setDialogSystemPrompt(systemPrompt);
                 setIsDialogOpen(true);
               }
             }}
           >
             ⚙️
           </span>
-          <Dialog isOpen={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
+          <Dialog isOpen={isDialogOpen} onClose={() => setIsDialogOpen(false)} onConfirm={handleConfirm}>
             <DialogTitle>設定</DialogTitle>
             <DialogContent>
               <label>
                 システムプロンプト
-                <textarea className="border rounded w-full h-32 p-2 mt-2"></textarea>
+                <textarea 
+                  value={dialogSystemPrompt}
+                  onChange={(e) => setDialogSystemPrompt(e.target.value)}
+                  className="border rounded w-full h-32 p-2 mt-2"
+                ></textarea>
               </label>
               <div className="mt-4">
                 <label>
-                  温度: {temperature.toFixed(1)}
+                  温度: {dialogTemperature.toFixed(1)}
                   <input
                     type="range"
                     min="0"
                     max="1"
                     step="0.1"
-                    value={temperature}
-                    onChange={(e) => setTemperature(Number(e.target.value))}
+                    value={dialogTemperature}
+                    onChange={(e) => setDialogTemperature(Number(e.target.value))}
                     className="w-full mt-2"
                   />
                   <div className="flex justify-between text-sm mt-1">
