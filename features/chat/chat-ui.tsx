@@ -107,7 +107,7 @@ export const ChatUI: FC<Prop> = (props) => {
             <DialogContent>
               <label>
                 システムプロンプト
-                <textarea className="border rounded w-full p-2 mt-2"></textarea>
+                <textarea className="border rounded w-full h-32 p-2 mt-2"></textarea>
               </label>
               <div className="mt-4">
                 <label>

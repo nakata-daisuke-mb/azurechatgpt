@@ -27,7 +27,7 @@ export const Dialog: FC<DialogProps> = ({ isOpen, onClose, onConfirm, children }
         className="fixed inset-0 bg-black opacity-50"
         onClick={onClose}
       ></div>
-      <div className="relative z-10 bg-background text-foreground p-6 rounded-lg w-96">
+      <div className="relative z-10 bg-background text-foreground p-6 rounded-lg w-1/2 h-1/2">
         {children}
         <div className="mt-4 flex justify-end">
           <button
