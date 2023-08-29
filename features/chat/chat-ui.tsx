@@ -75,6 +75,8 @@ export const ChatUI: FC<Prop> = (props) => {
     handleSubmit(e);
   };
 
+  const [temperature, setTemperature] = useState(0.6);
+
   return (
     <Card className="h-full relative">
       <div className="h-full rounded-md overflow-y-auto" ref={scrollRef}>
@@ -111,8 +113,21 @@ export const ChatUI: FC<Prop> = (props) => {
               </label>
               <div className="mt-4">
                 <label>
-                  温度
-                  <input type="range" className="w-full mt-2" />
+                  温度: {temperature.toFixed(1)}
+                  <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.1"
+                    value={temperature}
+                    onChange={(e) => setTemperature(Number(e.target.value))}
+                    className="w-full mt-2"
+                  />
+                  <div className="flex justify-between text-sm mt-1">
+                    <span>正確</span>
+                    <span>中立</span>
+                    <span>想像的</span>
+                  </div>
                 </label>
               </div>
             </DialogContent>
